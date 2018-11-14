@@ -1,0 +1,10 @@
+
+<a href="/courses/new">Новый курс</a>
+
+<?php foreach ($courses as $course): ?>
+  <div>
+    <?= htmlspecialchars($course['title']) ?>
+    <?= htmlspecialchars($course['paid']) ?>
+  </div>
+<?php endforeach ?>
+

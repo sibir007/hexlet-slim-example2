@@ -11,46 +11,56 @@ class Test extends TestCase
     public function setUp()
     {
         $this->client = new \GuzzleHttp\Client([
-            'base_uri' => 'http://localhost:8080',
-            'cookies' => true
+            'cookies' => true,
+            'base_uri' => 'http://localhost:8080'
         ]);
     }
 
     public function testCourses()
     {
-        $this->client->get('/');
-        $this->client->get('/posts');
-        $response = $this->client->get('/posts/new');
+        $response = $this->client->get('/');
         $body = $response->getBody()->getContents();
-        $this->assertContains('post[name]', $body);
-        $this->assertContains('post[body]', $body);
-
-        $formParams = ['post' => ['name' => '', 'body' => '']];
-        $response = $this->client->post('/posts', [
-            /* 'debug' => true, */
+        $this->assertContains('is empty', $body);
+        $formParams = ['item' => ['id' => '1', 'name' => 'One']];
+        $response = $this->client->post('/cart-items', [
             'form_params' => $formParams
         ]);
         $body = $response->getBody()->getContents();
-        $this->assertContains("Can't be blank", $body);
+        $this->assertContains('One', $body);
+        $this->assertContains('1', $body);
 
-        $formParams = ['post' => ['name' => 'first', 'body' => 'last']];
-        $response = $this->client->post('/posts', [
-            /* 'debug' => true, */
+        $formParams = ['item' => ['id' => '1', 'name' => 'One']];
+        $response = $this->client->post('/cart-items', [
             'form_params' => $formParams
         ]);
         $body = $response->getBody()->getContents();
-        $this->assertContains('Post has been created', $body);
-        $this->assertContains("first", $body);
+        $this->assertContains('One', $body);
+        $this->assertContains('2', $body);
 
-        $formParams = ['post' => ['name' => 'second', 'body' => 'another']];
-        $response = $this->client->post('/posts', [
-            /* 'debug' => true, */
+        $formParams = ['item' => ['id' => '2', 'name' => 'Two']];
+        $response = $this->client->post('/cart-items', [
             'form_params' => $formParams
         ]);
         $body = $response->getBody()->getContents();
-        $this->assertContains('Post has been created', $body);
-        $this->assertContains('first', $body);
-        $this->assertContains('second', $body);
+        $this->assertContains('Two', $body);
+        $formParams = ['item' => ['id' => '2', 'name' => 'Two']];
+        $response = $this->client->post('/cart-items', [
+            'form_params' => $formParams
+        ]);
+        $body = $response->getBody()->getContents();
+        $this->assertContains('Two', $body);
+
+        $formParams = ['item' => ['id' => '2', 'name' => 'Two']];
+        $response = $this->client->post('/cart-items', [
+            'form_params' => $formParams
+        ]);
+        $body = $response->getBody()->getContents();
+        $this->assertContains('Two', $body);
+        $this->assertContains('3', $body);
+
+        $response = $this->client->delete('/cart-items');
+        $body = $response->getBody()->getContents();
+        $this->assertContains('is empty', $body);
     }
 }
 

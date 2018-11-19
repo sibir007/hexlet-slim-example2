@@ -1,24 +1,20 @@
 <?php
-namespace App;
-use App\ValidatorInterface;
 
-class Validator implements ValidatorInterface
+namespace App;
+
+class Validator
 {
-    public function validate(array $cours)
+    public function validate(array $course)
     {
-        // BEGIN (write your solution here)
         $errors = [];
-        //var_dump($cours);
-        if (empty($cours['title']) && empty($cours['paid'])) {
-            $errors['title'] = "Can't be blank";
-            $errors['paid'] = "Can't be blank";
-        }elseif (empty($cours['paid'])) {
-            $errors['paid'] = "Can't be blank";
-        }elseif (empty($cours['title'])) {
-            $errors['title'] = "Can't be blank";
+        if ($course['name'] == '') {
+            $errors['name'] = "Can't be blank";
+        }
+
+        if (empty($course['body'])) {
+            $errors['body'] = "Can't be blank";
         }
 
         return $errors;
-        // END
     }
 }

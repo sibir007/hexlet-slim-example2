@@ -1,0 +1,28 @@
+<?php if (count($flash) > 0): ?>
+  <ul>
+  <?php foreach ($flash as $messages): ?>
+      <?php foreach ($messages as $message): ?>
+          <li><?= $message ?></li>
+      <?php endforeach ?>
+  <?php endforeach ?>
+  </ul>
+<?php endif ?>
+
+<a href="/posts/new">Новый пост</a>
+
+<!-- BEGIN (write your solution here) -->
+<?= 
+collect($posts)->reduce(function($acc, $value) {
+	return $acc . 
+		'<form action="/post/' . $value['id'] . '" method="post">'.
+			'<input type="hidden" name="_METHOD" value="DELETE">' .
+			'<lable>' .
+			'<a href="/post/' . $value['id'] . '/edit">' . $value['name'] . '</a>' .
+		 	'<input type="submit" value="remove">' .
+			'</lable>' .
+		'</form>'; 
+	},
+'');
+?>
+<!-- END -->
+

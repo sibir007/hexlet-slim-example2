@@ -1,4 +1,3 @@
-
 <?php
 
 namespace App\Tests;
@@ -12,57 +11,46 @@ class Test extends TestCase
     public function setUp()
     {
         $this->client = new \GuzzleHttp\Client([
-            'base_uri' => 'http://localhost:8080'
+            'base_uri' => 'http://localhost:8080',
+            'cookies' => true
         ]);
     }
 
     public function testCourses()
     {
-        $this->client->get('/courses');
-        $response = $this->client->get('/courses/new');
+        $this->client->get('/');
+        $this->client->get('/posts');
+        $response = $this->client->get('/posts/new');
         $body = $response->getBody()->getContents();
-        $this->assertContains('course[title]', $body);
-        $this->assertContains('course[paid]', $body);
+        $this->assertContains('post[name]', $body);
+        $this->assertContains('post[body]', $body);
 
-        $formParams = ['course' => ['title' => '', 'paid' => '']];
-        $response = $this->client->post('/courses', [
+        $formParams = ['post' => ['name' => '', 'body' => '']];
+        $response = $this->client->post('/posts', [
             /* 'debug' => true, */
             'form_params' => $formParams
         ]);
         $body = $response->getBody()->getContents();
         $this->assertContains("Can't be blank", $body);
 
-        $formParams = ['course' => ['title' => 'course name', 'paid' => '']];
-        $response = $this->client->post('/courses', [
+        $formParams = ['post' => ['name' => 'first', 'body' => 'last']];
+        $response = $this->client->post('/posts', [
             /* 'debug' => true, */
             'form_params' => $formParams
         ]);
         $body = $response->getBody()->getContents();
-        $this->assertContains("Can't be blank", $body);
-        $this->assertContains('course name', $body);
+        $this->assertContains('Post has been created', $body);
+        $this->assertContains("first", $body);
 
-        $formParams = ['course' => ['title' => '', 'paid' => '1']];
-        $response = $this->client->post('/courses', [
+        $formParams = ['post' => ['name' => 'second', 'body' => 'another']];
+        $response = $this->client->post('/posts', [
             /* 'debug' => true, */
             'form_params' => $formParams
         ]);
         $body = $response->getBody()->getContents();
-        $this->assertContains("Can't be blank", $body);
-
-        $formParams = ['course' => ['title' => '<script></script>', 'paid' => '']];
-        $response = $this->client->post('/courses', [
-            /* 'debug' => true, */
-            'form_params' => $formParams
-        ]);
-        $body = $response->getBody()->getContents();
-        $this->assertContains("&lt;script&gt;&lt;/script&gt;", $body);
-
-        $formParams = ['course' => ['title' => '<script></script>', 'paid' => '1']];
-        $response = $this->client->post('/courses', [
-            'allow_redirects' => false,
-            'form_params' => $formParams
-        ]);
-        $this->assertEquals($response->getStatusCode(), 302);
+        $this->assertContains('Post has been created', $body);
+        $this->assertContains('first', $body);
+        $this->assertContains('second', $body);
     }
 }
 

@@ -1,3 +1,9 @@
+<?php
+echo session_id();
+//echo '<pre>';
+print_r($_SESSION);
+//echo '<pre>';
+?>
 <form action="/cart-items" method="post">
     <input type="hidden" name="item[id]" value="1">
     <input type="hidden" name="item[name]" value="One">

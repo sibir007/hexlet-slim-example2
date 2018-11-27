@@ -1,0 +1,138 @@
+
+":so % применение правок без перезагрузки vim (если в vime)-:so C:\Users\Дмитрий\_vimrc
+set number
+"set nonumber
+set numberwidth=3
+"set fileencoding=utf-8
+set encoding=utf-8
+set termencoding=utf-8
+filetype off  "обязательно!
+
+"colorscheme evening
+
+set rtp+=~/vimfiles/bundle/vundle/
+
+call vundle#rc()
+
+"репозитории на github fjkjkj
+Bundle 'tpope/vim-fugitive'
+Bundle 'lokaltog/vim-easymotion'
+Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
+Plugin 'scrooloose/nerdtree' ":NERDTree запуск
+Plugin 'Xuyuanp/nerdtree-git-plugin'
+Bundle 'joonty/vim-phpqa.git'
+
+"репозитории vim/scripts
+Bundle 'L9'
+Bundle 'FuzzyFinder'
+Bundle 'rails.vim'
+
+
+"git репозитории (не на github)
+Bundle 'git://git.wincent.com/command-t.git'
+
+
+filetype plugin indent on     " обязательно!
+
+"закрытие скобок
+imap [ []<LEFT>
+imap ( ()<LEFT>
+imap { {}<LEFT>
+imap < <><LEFT>
+"закрытие кавычек
+inoremap " ""<LEFT>
+inoremap ' ''<LEFT>
+inoremap ' ''<LEFT>
+
+
+"НАСТРОЙКИ ВНЕШНЕГО ВИДА И БАЗОВЫЕ НАСТРОЙКИ РЕДАКТОРА
+set linebreak " переносить целые слова
+set mousehide " скрывать мышь в режиме ввода текста
+set showcmd " показывать незавершенные команды в статусбаре (автодополнение ввода)
+set mps+=<:> " показывать совпадающие скобки для HTML-тегов
+set showmatch " показывать первую парную скобку после ввода второй
+set autoread " перечитывать изменённые файлы автоматически
+"set t_Co=256 " использовать больше цветов в терминале (не включать)
+"Изменяет шрифт строки статуса (делает его не жирным)
+hi StatusLine gui=reverse cterm=reverse
+set laststatus=2 " всегда показывать строку состояния
+"set noruler "Отключить линейку
+"" Подсвечивать табы и пробелы в конце строки
+"set list " включить подсветку
+set nolist
+"set listchars=tab:>-,trail:- " установить символы, которыми будет осуществляться подсветка
+"Проблема красного на красном при spellchecking-е решается такой строкой в .vimrc
+highlight SpellBad ctermfg=Black ctermbg=Red
+au BufWinLeave *.* silent mkview " при закрытии файла сохранить 'вид'
+au BufWinEnter *.* silent loadview " при открытии - восстановить сохранённый
+set backspace=indent,eol,start " backspace обрабатывает отступы, концы строк
+set sessionoptions=curdir,buffers,tabpages " опции сессий - перейти в текущую директорию, использовать буферы и табы
+set browsedir=current
+set visualbell " вместо писка бипером мигать курсором при ошибках ввода
+set title " показывать имя буфера в заголовке терминала
+set history=128 " хранить больше истории команд
+set undolevels=2048 " хранить историю изменений числом N
+" При вставке фрагмента сохраняет отступ
+set pastetoggle=
+"подсвечивает все слова, которые совпадают со словом под курсором.
+autocmd CursorMoved * silent! exe printf("match Search /\\<%s\\>/", expand('<cword>'))
+
+
+"НАСТРОЙКИ ПОИСКА ТЕКСТА В ОТКРЫТЫХ ФАЙЛАХ
+set ignorecase " ics - поиск без учёта регистра символов
+"set smartcase " - если искомое выражения содержит символы в верхнем регистре - ищет с учётом регистра, иначе - без учёта
+"set nohlsearch " (не)подсветка результатов поиска (после того, как поиск закончен и закрыт)
+set incsearch " поиск фрагмента по мере его набора
+" поиск выделенного текста (начинать искать фрагмент при его выделении)
+"vnoremap <silent>* <ESC>:call VisualSearch()<CR>/<C-R>/<CR>
+"vnoremap <silent># <ESC>:call VisualSearch()<CR>?<C-R>/<CR>
+
+
+"НАСТРОЙКИ СВОРАЧИВАНИЯ БЛОКОВ ТЕКСТА (фолдинг)
+set foldenable " включить фолдинг
+"set foldmethod=syntax " определять блоки на основе синтаксиса файла
+"set foldmethod=indent " определять блоки на основе отступов
+"set foldcolumn=3 " показать полосу для управления сворачиванием
+"set foldlevel=1 " Первый уровень вложенности открыт, остальные закрыты
+"set foldopen=all " автоматическое открытие сверток при заходе в них
+"set tags=tags\ $VIMRUNTIME/systags " искать теги в текущй директории и в указанной (теги генерируются ctags)
+
+
+
+"НАСТРОЙКИ ОТСТУПА
+"set shiftwidth=4 " размер отступов (нажатие на << или >>)
+set tabstop=4 " ширина табуляции
+set softtabstop=4 " ширина 'мягкого' таба
+"set autoindent " ai - включить автоотступы (копируется отступ предыдущей строки)
+"set cindent " ci - отступы в стиле С
+"set expandtab " преобразовать табуляцию в пробелы
+set smartindent " Умные отступы (например, автоотступ после {)
+" Для указанных типов файлов отключает замену табов пробелами и меняет ширину отступа
+"au FileType crontab,fstab,make set noexpandtab tabstop=8 shiftwidth=8
+
+"ВКЛЮЧЕНИЕ АВТОДОПЛНЕНИЯ ВВОДА (omnifunct)
+"autocmd FileType python set omnifunc=pythoncomplete#Complete
+"autocmd FileType tt2html set omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
+autocmd FileType css set omnifunc=csscomplete#CompleteCSS
+"autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags
+autocmd FileType php set omnifunc=phpcomplete#CompletePHP
+"autocmd FileType c set omnifunc=ccomplete#Complete
+" Опции автодополнения - включаем только меню с доступными вариантами
+" автодополнения (также, например, для omni completion может быть
+" окно предварительного просмотра).
+"set completeopt=menu
+"-------------------------------------------------------------------------------
+" perl-support.vim
+"-------------------------------------------------------------------------------
+"let g:Perl_AuthorName        = 'dimio'
+"let g:Perl_AuthorRef         = 'http:://dimio.org'
+"let g:Perl_Email             = 'dimio@dimio.org'
+
+
+
+
+
+
+

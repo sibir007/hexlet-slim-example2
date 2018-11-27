@@ -2,7 +2,7 @@
 namespace App;
 require __DIR__ . '/../vendor/autoload.php';
 
-
+//session_start();
 $repo = new Repository();
 
 $configuration = [
@@ -19,7 +19,8 @@ $container['renderer'] = new \Slim\Views\PhpRenderer(__DIR__ . '/../templates');
 $app->get('/', function ($request, $response) {
     $cart = json_decode($request->getCookieParam('cart', json_encode([])), true);
     $params = [
-        'cart' => $cart
+			'cart' => $cart,
+			//'phpsessid' => $PHPSESSID
     ];
     return $this->renderer->render($response, 'index.phtml', $params);
 });

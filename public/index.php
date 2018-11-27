@@ -1,8 +1,7 @@
 <?php
-
 namespace App;
+require __DIR__ . '/../vendor/autoload.php';
 
-require '/../../vendor/composer/vendor/autoload.php';
 
 use function Stringy\create as s;
 
@@ -64,4 +63,3 @@ $app->delete('/session', function ($req, $res) {
 // END
 
 $app->run();
-

@@ -1,35 +1,42 @@
-<?php
-echo session_id();
-//echo '<pre>';
-print_r($_SESSION);
-//echo '<pre>';
-?>
-<form action="/cart-items" method="post">
-    <input type="hidden" name="item[id]" value="1">
-    <input type="hidden" name="item[name]" value="One">
-    One
-    <input type="submit" value="Add">
-</form>
+<?php if (count($flash) > 0): ?> 
+  <ul> 
+  <?php foreach ($flash as $messages): ?> 
+      <?php foreach ($messages as $message): ?> 
+          <li><?= $message ?></li> 
+      <?php endforeach ?> 
+  <?php endforeach ?> 
+  </ul> 
+<?php endif ?> 
 
-<form action="/cart-items" method="post">
-    <input type="hidden" name="item[id]" value="2">
-    <input type="hidden" name="item[name]" value="Second">
-    Second
-    <input type="submit" value="Add">
-</form>
 
-<form action="/cart-items" method="post">
+<!-- BEGIN (write your solution here) -->
+<?php if(!isset($_SESSION['userName'])) {?>
+<form action="/session" method="post"> 
+  <div> 
+    <label>
+        Имя 
+      <input type="text" name="user[name]"> 
+    </label> 
+  </div> 
+  <div> 
+    <label> 
+        Пароль 
+    <input type="password" required name="user[password]"> 
+    </label> 
+    </div> 
+  <input type="submit" value="Sign In"> 
+ <?php } else { ?>
+<form action="/session" method="post"> 
     <input type="hidden" name="_METHOD" value="delete">
-    <input type="submit" value="Clean">
-</form>
+  <div> 
+    <label>
+        Имя 
+      <input type="text" name="user[name]" value=<?= $_SESSION['userName'] ?>> 
+    </label> 
+  </div> 
+  <input type="submit" value="Sign Out"> 
+ <?php } ?>
 
-<?php if (count($cart) == 0): ?>
-    <div>Cart is empty</div>
-<?php else: ?>
-    <?php foreach ($cart as $item): ?>
-        <div>
-            <?= htmlspecialchars($item['name']) ?>: <?= htmlspecialchars($item['count']) ?>
-        </div>
-    <?php endforeach ?>
-<?php endif ?>
+
+<!-- END -->
 
